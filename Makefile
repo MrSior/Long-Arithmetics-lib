@@ -8,7 +8,7 @@ SRC=src
 OBJ=obj
 BUILD=build
 
-LIB=$(LIBDIR)/BigNumLibrary.a
+LIB=$(LIBDIR)/libBigNumLibrary.a
 
 SRCS = $(wildcard $(SRC)/*.cpp) 
 OBJS = $(patsubst $(SRC)/%.cpp, $(OBJ)/%.o, $(SRCS))
@@ -19,11 +19,10 @@ LIBOBJS = $(patsubst $(LIBSRCDIR)/%.cpp, $(LIBOBJDIR)/%.o, $(LIBSRCS))
 all: $(LIB) main
 
 main: $(OBJ) $(OBJS) $(BUILD)
-	$(CXX) $(CXXFLAGS) $(OBJS) -o $(BUILD)/main
+	$(CXX) $(CXXFLAGS) $(OBJS) -o $(BUILD)/main -L./$(LIBDIR)/ -lBigNumLibrary
 
 
 $(LIB): $(LIBDIR) $(LIBOBJDIR) $(LIBOBJS)
-# 	rm $(LIB)
 	ar -cvrs $(LIB) $(LIBOBJS)
 
 $(LIBOBJDIR)/%.o: $(LIBSRCDIR)/%.cpp $(LIBSRCDIR)/%.h
@@ -33,9 +32,7 @@ $(OBJ)/%.o: $(SRC)/%.cpp $(SRC)/%.h
 	$(CXX) $(CXXFLAGS) -llibrary $(LIB) -c $< -o $@
 
 $(OBJ)/%.o: $(SRC)/%.cpp
-	$(CXX) $(CXXFLAGS) $(LIBOBJS) -c $< -o $@
-
-
+	$(CXX) $(CXXFLAGS) -c $< -o $@ -I./$(LIBSRCDIR)/
 
 $(OBJ):
 	mkdir $@
@@ -49,5 +46,10 @@ $(LIBOBJDIR):
 $(BUILD):
 	mkdir $@
 
+run: main
+	@./$(BUILD)/main
+
 clean:
-	rm -r $(OBJ) $(LIBOBJDIR) $(LIBDIR) $(BUILD) 
+	@rm -r $(OBJ) $(LIBOBJDIR) $(LIBDIR) $(BUILD) 
+
+.PHONY: run clean
