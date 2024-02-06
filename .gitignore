@@ -2,5 +2,6 @@ lib/
 libobj/
 
 obj/
+bild/
 
 .DS_Store
