@@ -1,4 +1,4 @@
 lib/
 libobj/
 
-obj/
+obj/.DS_Store
