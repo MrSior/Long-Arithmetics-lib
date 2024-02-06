@@ -16,9 +16,9 @@ OBJS = $(patsubst $(SRC)/%.cpp, $(OBJ)/%.o, $(SRCS))
 LIBSRCS = $(wildcard $(LIBSRCDIR)/*.cpp) 
 LIBOBJS = $(patsubst $(LIBSRCDIR)/%.cpp, $(LIBOBJDIR)/%.o, $(LIBSRCS))
 
-all: $(LIB) main
+all: $(LIB) $(BUILD)/main
 
-main: $(OBJ) $(OBJS) $(BUILD)
+$(BUILD)/main: $(OBJ) $(OBJS) $(BUILD)
 	$(CXX) $(CXXFLAGS) $(OBJS) -o $(BUILD)/main -L./$(LIBDIR)/ -lBigNumLibrary
 
 
@@ -46,7 +46,7 @@ $(LIBOBJDIR):
 $(BUILD):
 	mkdir $@
 
-run: main
+run: $(BUILD)/main
 	@./$(BUILD)/main
 
 clean:
