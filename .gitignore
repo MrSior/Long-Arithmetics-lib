@@ -5,3 +5,5 @@ obj/
 bild/
 
 .DS_Store
+.clangd
+.clang-format
