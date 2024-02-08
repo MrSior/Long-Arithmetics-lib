@@ -561,22 +561,23 @@ bool operator==(const BigNum &first, const BigNum &second) {
     lh.ShiftToExp(max_precision);
     rh.ShiftToExp(max_precision);
 
-    if (lh.blocks_.size() != rh.blocks_.size()) {
-        // std::cout << "LOG (oper ==)1: " << lh.toString()
-        //           << " == " << rh.toString() << " = " << false << std::endl;
-        return false;
-    }
-    for (int ind = 0; ind < lh.blocks_.size(); ++ind) {
-        if (lh.blocks_[ind] != rh.blocks_[ind]) {
-            // std::cout << "LOG (oper ==)2: " << lh.toString()
-            //           << " == " << rh.toString() << " = " << false <<
-            //           std::endl;
-            return false;
+    for (int ind = std::max(lh.blocks_.size(), rh.blocks_.size()) - 1; ind >= 0;
+         --ind) {
+        if (ind >= rh.blocks_.size()) {
+            if (lh.blocks_[ind] != 0) {
+                return false;
+            }
+        } else if (ind >= lh.blocks_.size()) {
+            if (rh.blocks_.size() != 0) {
+                return false;
+            }
+        } else {
+            if (lh.blocks_[ind] != rh.blocks_[ind]) {
+                return false;
+            }
         }
     }
-    // std::cout << "LOG (oper ==)3: " << lh.toString() << " == " <<
-    // rh.toString()
-    //           << " = " << true << std::endl;
+
     return true;
 }
 

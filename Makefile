@@ -1,5 +1,5 @@
 CXX=g++
-CXXFLAGS=-g -std=c++20
+CXXFLAGS=-O2 -g0 -std=c++20
 
 LIBSRCDIR=libsrc
 LIBOBJDIR=libobj
