@@ -1,4 +1,5 @@
 #include "BigNum.h"
+#include <cstdio>
 #include <utility>
 
 BigNum::BigNum() { Init(); }
@@ -564,30 +565,6 @@ void BigNum::evalf(int32_t precision) {
 BigNum operator"" _bn(const char *val) { return {val}; }
 
 BigNum CalcPi(int32_t precision) {
-
-    //    auto arctan = [](const BigNum& x, int steps) {
-    //        BigNum res = x;
-    //        auto numer = x * x * x;
-    //        int denom = 3;
-    ////        std::cout << x.toString() << std::endl;
-    //        for (int i = 1; i < steps; ++i, denom += 2, numer = numer * x * x)
-    //        {
-    //            auto sum = BigNumDiv(numer, denom, 70, false);
-    ////            std::cout << numer.toString() << " / " << denom << " = " <<
-    /// sum.toString() << std::endl;
-    //            if (i % 2 == 0) {
-    //                res = res + sum;
-    //            } else {
-    //                res = res - sum;
-    //            }
-    //            std::cout << "Step = " << i << "\n";
-    //        }
-    //        return res;
-    //    };
-    //
-    //    auto arc1 = arctan(1_bn / 5_bn, 200);
-    //    auto arc2 = arctan(BigNumDiv(1_bn, 239_bn, 70), 40);
-    //    return 4 * (4 * arc1 - arc2);
     ++precision;
 
     auto math_sqrt = [](const BigNum &num) {
@@ -674,25 +651,26 @@ BigNum CalcPi(int32_t precision) {
     }
 
     auto sqrtC = sqrt(10005 * one, one);
-
-    //    auto r = res.second *
-    //    BigNum("1000249968757810059447921878763577780015950243686963146571355115696509678538643042923111879484999732977551938893695661811101310349073901991031130110817620021084773209484713755522300964025814877362597996538778520690844138517442330859859351368356455959879200742054803370888442591728291463927179974654449569355332351563623934371444461273353426110551814049847091601969015554438382830530991787981536628540422125155591789551900389567969478750437233467227464892504600935861206393398280616207431963680961315612113677398957195886501859014838681740375258974396156572830025905031781793481127928508115201563959053331833991286790700407982081441386506614037421393224134385067616132531528652053801465767617231369828928041492395588277347299224032881241981474836093181268398950719719184613180485442334808803907336200724905008814141075979996361648210336419155533604357564303407077666606427135655088765678439754372321736055432944086373962522100785904153733709154299465285532563568099289783119057016422898294516743742803726")
-    //    * 426880;
     auto r = res.second * sqrtC * 426880;
     auto pi = BigNumDiv(r, res.third, 0);
-    auto str = pi.toString();
-    str.pop_back();
-    if (pi.getExp() < 0) {
-        for (int i = 0; i < -pi.getExp() + 1; ++i) {
-            str.pop_back();
-        }
+    // auto str = pi.toString();
+    //
+    // str.pop_back();
+    // if (pi.getExp() < 0) {
+    //     for (int i = 0; i < -pi.getExp() + 1; ++i) {
+    //         str.pop_back();
+    //     }
+    // }
+    // pi = BigNum(str);
+    // pi.setExp(-precision + 1);
+    // return pi;
+
+    // return pi;
+    auto pi_str = pi.toString();
+    while (pi_str.length() > precision) {
+        pi_str.pop_back();
     }
-    pi = BigNum(str);
-    pi.setExp(-precision + 1);
+    pi = BigNum(pi_str);
+    pi.setExp(pi.getExp() - (pi_str.length()) + 1);
     return pi;
 }
-
-// 3.1415926535897932384626433832795028841971693993751058209749445923
-// 3.14159265358979323846264338327950288419716939937507832635983263598326359832635983263598326359832636
-// 3.1415926535897932384626433832795028841971693993751058209749445923078188
-// 3.1415926535897932384626433832795028841971693993751058209749445923078188000

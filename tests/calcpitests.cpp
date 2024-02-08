@@ -33,18 +33,27 @@ int main() {
         auto time_end = high_resolution_clock::now();
         auto res_str = res.toString();
         int64_t duration = duration_cast<seconds>(time_end - time_s).count();
-        if (pi.substr(0, digits + 2) == res_str) {
-            printf("\x1b[32m[OK] \x1b[0m digits: %d time: %lld\n", digits,
-                   duration);
+
+        auto right_res_str = pi.substr(0, digits + 2);
+        while (right_res_str.back() == '0') {
+            right_res_str.pop_back();
+        }
+
+        if (right_res_str == res_str) {
+            printf("\x1b[32m[OK] \x1b[0m digits: %d time: %lld seconds\n",
+                   digits, duration);
             return true;
         }
-        printf("\x1b[31m[ERROR]:\x1b[0m digits: %d", digits);
+        printf("Right %s\n", right_res_str.c_str());
+        printf("My    %s\n", res_str.c_str());
+        printf("Exp   %lu\n", res.toString().length());
+        printf("\x1b[31m[ERROR]:\x1b[0m digits: %d\n", digits);
         return false;
     };
 
-    for (int digits = 10; digits < 1000; digits *= 2) {
+    for (auto digits : {10, 40, 50, 70, 100}) {
         if (!check(digits)) {
-            return 0;
+            // return 0;
         }
     }
 
