@@ -271,31 +271,6 @@ BigNum::BigNum(const BigNum &other) {
 }
 
 bool operator<(const BigNum &first, const BigNum &second) {
-    //    if (first.sign_ < second.sign_) return true;
-    //    if (first.sign_ > second.sign_) return false;
-    //
-    //    auto str1 = first.toString(false);
-    //    auto str2 = second.toString(false);
-    //
-    //    auto itr1 = std::find(str1.begin(), str1.end(), '.');
-    //    auto itr2 = std::find(str2.begin(), str2.end(), '.');
-    //    if (std::distance(str1.begin(), itr1) < std::distance(str2.begin(),
-    //    itr2)) return true; if (std::distance(str1.begin(), itr1) >
-    //    std::distance(str2.begin(), itr2)) return false;
-    //
-    //    for (size_t ind = 0; str1.begin() + ind != itr1; ++ind) {
-    //        if (str1[ind] < str2[ind]) return true;
-    //        if (str1[ind] > str2[ind]) return false;
-    //    }
-    //
-    //    while (itr1 < str1.end() && itr2 < str2.end()) {
-    //        if (*itr1 > *itr2) return false;
-    //        if (*itr1 < *itr2) return true;
-    //        ++itr1;
-    //        ++itr2;
-    //    }
-    //
-    //    return false;
     if (first.sign_ < second.sign_)
         return true;
     if (first.sign_ > second.sign_)

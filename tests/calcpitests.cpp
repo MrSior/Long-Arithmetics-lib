@@ -32,7 +32,8 @@ int main() {
         auto res = CalcPi(digits);
         auto time_end = high_resolution_clock::now();
         auto res_str = res.toString();
-        int64_t duration = duration_cast<seconds>(time_end - time_s).count();
+        int64_t duration =
+            duration_cast<milliseconds>(time_end - time_s).count();
 
         auto right_res_str = pi.substr(0, digits + 2);
         while (right_res_str.back() == '0') {
@@ -40,7 +41,7 @@ int main() {
         }
 
         if (right_res_str == res_str) {
-            printf("\x1b[32m[OK] \x1b[0m digits: %d time: %lld seconds\n",
+            printf("\x1b[32m[OK] \x1b[0m digits: %d time: %lld milliseconds\n",
                    digits, duration);
             return true;
         }

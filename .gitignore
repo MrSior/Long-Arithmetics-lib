@@ -4,6 +4,8 @@ libobj/
 obj/
 bild/
 
+tests/bin/
+
 .DS_Store
 .clangd
 .clang-format

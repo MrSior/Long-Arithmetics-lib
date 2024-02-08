@@ -10,10 +10,10 @@ BUILD=build
 
 LIB=$(LIBDIR)/libBigNumLibrary.a
 
-SRCS = $(wildcard $(SRC)/*.cpp) 
+SRCS = $(wildcard $(SRC)/*.cpp)
 OBJS = $(patsubst $(SRC)/%.cpp, $(OBJ)/%.o, $(SRCS))
 
-LIBSRCS = $(wildcard $(LIBSRCDIR)/*.cpp) 
+LIBSRCS = $(wildcard $(LIBSRCDIR)/*.cpp)
 LIBOBJS = $(patsubst $(LIBSRCDIR)/%.cpp, $(LIBOBJDIR)/%.o, $(LIBSRCS))
 
 TEST=tests
