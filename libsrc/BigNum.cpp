@@ -1,10 +1,13 @@
 #include "BigNum.h"
+#include <algorithm>
+#include <cmath>
 #include <cstdio>
+#include <cstdlib>
 #include <utility>
 
 BigNum::BigNum() { Init(); }
 
-void BigNum::printBlocks() {
+void BigNum::printBlocks() const {
     std::cout << "Sign = " << sign_ << std::endl;
     for (auto &item : blocks_) {
         std::cout << item << " ";
@@ -229,16 +232,22 @@ BigNum operator-(BigNum first, BigNum second) {
         return res;
     }
 
+    first.ShiftToExp(std::min(first.exp_, second.exp_));
+    second.ShiftToExp(std::min(first.exp_, second.exp_));
+
+    // bool is_change_sign = false;
+    // if (first < second) {
+    //     is_change_sign = true;
+    //     BigNum tmp = first;
+    //     first = second;
+    //     second = tmp;
+    // }
+
     bool is_change_sign = false;
     if (first < second) {
         is_change_sign = true;
-        BigNum tmp = first;
-        first = second;
-        second = tmp;
+        swap(first, second);
     }
-
-    first.ShiftToExp(std::min(first.exp_, second.exp_));
-    second.ShiftToExp(std::min(first.exp_, second.exp_));
 
     for (size_t ind = 0; ind < second.blocks_.size(); ++ind) {
         if (first.blocks_[ind] >= second.blocks_[ind]) {
@@ -271,33 +280,184 @@ BigNum::BigNum(const BigNum &other) {
 }
 
 bool operator<(const BigNum &first, const BigNum &second) {
-    if (first.sign_ < second.sign_)
-        return true;
-    if (first.sign_ > second.sign_)
-        return false;
+    // if (first.sign_ < second.sign_)
+    //     return true;
+    // if (first.sign_ > second.sign_)
+    //     return false;
 
-    auto max_precision = std::min(first.exp_, second.exp_);
-    auto lh = first;
-    auto rh = second;
-    lh.ShiftToExp(max_precision);
-    rh.ShiftToExp(max_precision);
+    // auto max_precision = std::min(first.exp_, second.exp_);
+    // auto lh = first;
+    // auto rh = second;
+    // lh.ShiftToExp(max_precision);
+    // rh.ShiftToExp(max_precision);
 
-    auto str_lh = lh.toString();
-    auto str_rh = rh.toString();
-    if (str_lh.length() < str_rh.length())
-        return true;
-    if (str_lh.length() > str_rh.length())
-        return false;
+    // auto str_lh = lh.toString();
+    // auto str_rh = rh.toString();
+    // if (str_lh.length() < str_rh.length())
+    //     return true;
+    // if (str_lh.length() > str_rh.length())
+    //     return false;
 
-    for (size_t ind = 0; ind < str_lh.length(); ++ind) {
-        if (str_lh[ind] < str_rh[ind]) {
+    // for (size_t ind = 0; ind < str_lh.length(); ++ind) {
+    //     if (str_lh[ind] < str_rh[ind]) {
+    //         return true;
+    //     }
+    //     if (str_lh[ind] > str_rh[ind]) {
+    //         return false;
+    //     }
+    // }
+    // return false;
+
+    //=====================================================
+
+    // if (first.sign_ < second.sign_)
+    //     return true;
+    // if (first.sign_ > second.sign_)
+    //     return false;
+
+    // auto max_precision = std::min(first.exp_, second.exp_);
+    // auto lh = first;
+    // auto rh = second;
+    // lh.ShiftToExp(max_precision);
+    // rh.ShiftToExp(max_precision);
+
+    // if (lh.blocks_.size() < rh.blocks_.size()) {
+    //     // std::cout << "LOG (oper <)1: " << lh.toString() << " < "
+    //     //           << rh.toString() << " = " << true << std::endl;
+    //     return true;
+    // }
+    // if (lh.blocks_.size() > rh.blocks_.size()) {
+    //     // std::cout << "LOG (oper <)2: " << lh.toString() << " < "
+    //     //           << rh.toString() << " = " << false << std::endl;
+    //     return false;
+    // }
+
+    // for (int ind = lh.blocks_.size() - 1; ind >= 0; --ind) {
+    //     if (lh.blocks_[ind] > rh.blocks_[ind]) {
+    //         // std::cout << "LOG (oper <)3: " << lh.toString() << " < "
+    //         //           << rh.toString() << " = " << false << std::endl;
+    //         return false;
+    //     }
+    //     if (lh.blocks_[ind] < rh.blocks_[ind]) {
+    //         // std::cout << "LOG (oper <)4: " << lh.toString() << " < "
+    //         //           << rh.toString() << " = " << true << std::endl;
+    //         return true;
+    //     }
+    // }
+
+    // // std::cout << "LOG (oper <)5: " << lh.toString() << " < " <<
+    // rh.toString()
+    // //           << " = " << false << std::endl;
+
+    // return false;
+
+    auto var1 = [](const BigNum &first, const BigNum &second) {
+        if (first.sign_ < second.sign_)
             return true;
-        }
-        if (str_lh[ind] > str_rh[ind]) {
+        if (first.sign_ > second.sign_)
             return false;
+
+        auto max_precision = std::min(first.exp_, second.exp_);
+        auto lh = first;
+        auto rh = second;
+        lh.ShiftToExp(max_precision);
+        rh.ShiftToExp(max_precision);
+
+        auto str_lh = lh.toString();
+        auto str_rh = rh.toString();
+        if (str_lh.length() < str_rh.length())
+            return true;
+        if (str_lh.length() > str_rh.length())
+            return false;
+
+        for (size_t ind = 0; ind < str_lh.length(); ++ind) {
+            if (str_lh[ind] < str_rh[ind]) {
+                return true;
+            }
+            if (str_lh[ind] > str_rh[ind]) {
+                return false;
+            }
         }
-    }
-    return false;
+        return false;
+    };
+
+    auto var2 = [](const BigNum &first, const BigNum &second,
+                   bool debug = false) {
+        if (first.sign_ < second.sign_)
+            return true;
+        if (first.sign_ > second.sign_)
+            return false;
+
+        auto max_precision = std::min(first.exp_, second.exp_);
+        auto lh = first;
+        auto rh = second;
+
+        if (debug) {
+            std::cout << "first: \n";
+            first.printBlocks();
+
+            std::cout << "second: \n";
+            second.printBlocks();
+        }
+
+        lh.ShiftToExp(max_precision);
+        rh.ShiftToExp(max_precision);
+
+        if (debug) {
+            std::cout << "lh: \n";
+            lh.printBlocks();
+
+            std::cout << "rh: \n";
+            rh.printBlocks();
+        }
+
+        for (int ind = std::max(lh.blocks_.size(), rh.blocks_.size()) - 1;
+             ind >= 0; --ind) {
+            if (ind >= lh.blocks_.size()) {
+                if (rh.blocks_[ind] != 0) {
+                    return true;
+                }
+            } else if (ind >= rh.blocks_.size()) {
+                if (lh.blocks_[ind] != 0) {
+                    return false;
+                }
+            } else {
+                if (lh.blocks_[ind] > rh.blocks_[ind]) {
+                    if (debug) {
+                        std::cout << "LOG (oper <)3: " << lh.toString() << " < "
+                                  << rh.toString() << " = " << false
+                                  << std::endl;
+                    }
+                    return false;
+                }
+                if (lh.blocks_[ind] < rh.blocks_[ind]) {
+                    if (debug) {
+                        std::cout << "LOG (oper <)4: " << lh.toString() << " < "
+                                  << rh.toString() << " = " << true
+                                  << std::endl;
+                    }
+                    return true;
+                }
+            }
+        }
+
+        if (debug) {
+            std::cout << "LOG (oper <)5: " << lh.toString() << " < "
+                      << rh.toString() << " = " << false << std::endl;
+        }
+
+        return false;
+    };
+
+    // auto res1 = var1(first, second);
+    auto res2 = var2(first, second);
+
+    // if (res1 != res2) {
+    //     var2(first, second, true);
+    //     exit(1);
+    // }
+
+    return res2;
 }
 
 BigNum::BigNum(BigNum &&other) noexcept {
@@ -376,22 +536,47 @@ bool operator==(const BigNum &first, const BigNum &second) {
     //
     //    return is_only_zeroes(itr1, first_str) && is_only_zeroes(itr2,
     //    second_str);
+
+    // auto max_precision = std::min(first.exp_, second.exp_);
+    // auto lh = first;
+    // auto rh = second;
+    // lh.ShiftToExp(max_precision);
+    // rh.ShiftToExp(max_precision);
+
+    // auto str_lh = lh.toString();
+    // auto str_rh = rh.toString();
+    // if (str_lh.length() != str_rh.length())
+    //     return false;
+
+    // for (size_t ind = 0; ind < str_lh.length(); ++ind) {
+    //     if (str_lh[ind] != str_rh[ind]) {
+    //         return false;
+    //     }
+    // }
+    // return true;
+
     auto max_precision = std::min(first.exp_, second.exp_);
     auto lh = first;
     auto rh = second;
     lh.ShiftToExp(max_precision);
     rh.ShiftToExp(max_precision);
 
-    auto str_lh = lh.toString();
-    auto str_rh = rh.toString();
-    if (str_lh.length() != str_rh.length())
+    if (lh.blocks_.size() != rh.blocks_.size()) {
+        // std::cout << "LOG (oper ==)1: " << lh.toString()
+        //           << " == " << rh.toString() << " = " << false << std::endl;
         return false;
-
-    for (size_t ind = 0; ind < str_lh.length(); ++ind) {
-        if (str_lh[ind] != str_rh[ind]) {
+    }
+    for (int ind = 0; ind < lh.blocks_.size(); ++ind) {
+        if (lh.blocks_[ind] != rh.blocks_[ind]) {
+            // std::cout << "LOG (oper ==)2: " << lh.toString()
+            //           << " == " << rh.toString() << " = " << false <<
+            //           std::endl;
             return false;
         }
     }
+    // std::cout << "LOG (oper ==)3: " << lh.toString() << " == " <<
+    // rh.toString()
+    //           << " = " << true << std::endl;
     return true;
 }
 
@@ -433,6 +618,12 @@ void BigNum::RemoveInsignificantZeroes() {
     } else {
         size_t covered_blocks =
             (-exp_) / block_size_ + ((-exp_) % block_size_ == 0 ? 0 : 1);
+        // if (covered_blocks == blocks_.size()) {
+        //     while (blocks_.back() == 0) {
+        //         blocks_.pop_back();
+        //         exp_ -= BigNum::block_size_;
+        //     }
+        // }
         while (blocks_.size() > covered_blocks) {
             if (blocks_.back() != 0)
                 break;
@@ -485,14 +676,6 @@ BigNum BigNumDiv(BigNum first, const BigNum &second, int32_t precision,
         }
         divider = lh;
     }
-
-    //    while ((divider + 1) * second <= first) {
-    //        std::cout << divider.toString() << std::endl;
-    //        if (divider.toString() == "31415926533") {
-    //            std::cout << ((divider + 1) * second).toString() << '\n';
-    //        }
-    //        divider = divider + 1;
-    //    }
 
     if (debug) {
         std::cout << "LOG: divider = " << divider.toString() << std::endl;

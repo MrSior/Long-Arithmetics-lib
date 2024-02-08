@@ -62,6 +62,6 @@ run: $(BUILD)/main
 	@./$(BUILD)/main
 
 clean:
-	@rm -r $(OBJ) $(LIBOBJDIR) $(LIBDIR) $(BUILD) $(TEST)/bin
+	@rm -rf $(OBJ) $(LIBOBJDIR) $(LIBDIR) $(BUILD) $(TEST)/bin
 
 .PHONY: run clean

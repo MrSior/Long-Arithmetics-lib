@@ -50,7 +50,7 @@ class BigNum {
     BigNum &operator=(BigNum &&other) noexcept;
     BigNum &operator=(const BigNum &other);
 
-    void printBlocks();
+    void printBlocks() const;
 
     void ShiftToExp(int32_t new_exp);
 

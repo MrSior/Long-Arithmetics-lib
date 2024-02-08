@@ -4,24 +4,24 @@
 using namespace std::chrono;
 
 int main() {
-    BigNum a = "10";
-    //    BigNum a = "0.192347";
-    a.printBlocks();
-    BigNum b = "0.5";
-    b.printBlocks();
+    // BigNum a = "166350886035.376989";
+    // //    BigNum a = "0.192347";
+    // // a.printBlocks();
+    // BigNum b = "864847832487";
+    // // b.printBlocks();
 
-    std::cout << (a / b).toString() << std::endl;
+    // std::cout << (a / b).toString() << std::endl;
 
-    // std::cout << (BigNum("0.5") * BigNum("2.0") <= BigNum("2.5"));
+    // LOG (BINSEARCH): lh = 8	mid = 9	rh = 10.000
+    // LOG (oper <): 864847832487 < 9 = 0
+    // LOG (oper <): 7986610278667.6989 < 7783630492383 = 0
+    // LOG (oper <): 864847832487 < 9 = 0
+    // LOG (oper <): 7783630492383 < 7986610278667.6989 = 0
+    // LOG (oper <): 1 < 2.000 = 1
+    // LOG (oper <): 2.000 < 0.5 = 0
 
-    auto time_s = high_resolution_clock::now();
-    std::cout << CalcPi(10).toString() << std::endl;
-    auto time_end = high_resolution_clock::now();
-    std::cout << "Time: "
-              << duration_cast<milliseconds>(time_end - time_s).count()
-              << " milliseconds" << std::endl;
-
-    printf("\x1b[42m[OK]\x1b[0m  \n");
-    printf("\x1b[37;41m[ERROR]\x1b[0m  \n");
+    BigNum a = "1";
+    BigNum b = "2";
+    std::cout << CalcPi(10).toString();
     return 0;
 }
