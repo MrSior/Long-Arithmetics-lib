@@ -111,31 +111,6 @@ void BigNum::SeparateToBlocks(const std::string &str) {
 }
 
 void BigNum::ShiftToExp(int32_t new_exp) {
-    //    if (new_exp == exp_) return;
-    //    if (new_exp > exp_) {
-    //        throw BigNumError("ShiftToExp can only shift to lower exponent");
-    //    }
-    //    decltype(exp_) diff_exp = exp_ - new_exp;
-    //
-    //    std::string str;
-    //    for (auto itr = blocks_.end() - 1; itr >= blocks_.begin(); --itr) {
-    //        std::string num = std::to_string(*itr);
-    //        if (itr == blocks_.end() - 1) {
-    //            str += num;
-    //        } else {
-    //            str += std::string(block_size_ - num.length(), '0') + num;
-    //        }
-    //
-    //        if (itr == blocks_.begin()) {
-    //            str += std::string(diff_exp, '0');
-    //        }
-    //    }
-    //
-    //    exp_ = new_exp;
-    //    blocks_.clear();
-    //    std::reverse(str.begin(), str.end());
-    //    SeparateToBlocks(str);
-
     if (new_exp == exp_)
         return;
     if (new_exp > exp_) {
@@ -235,14 +210,6 @@ BigNum operator-(BigNum first, BigNum second) {
     first.ShiftToExp(std::min(first.exp_, second.exp_));
     second.ShiftToExp(std::min(first.exp_, second.exp_));
 
-    // bool is_change_sign = false;
-    // if (first < second) {
-    //     is_change_sign = true;
-    //     BigNum tmp = first;
-    //     first = second;
-    //     second = tmp;
-    // }
-
     bool is_change_sign = false;
     if (first < second) {
         is_change_sign = true;
@@ -280,109 +247,8 @@ BigNum::BigNum(const BigNum &other) {
 }
 
 bool operator<(const BigNum &first, const BigNum &second) {
-    // if (first.sign_ < second.sign_)
-    //     return true;
-    // if (first.sign_ > second.sign_)
-    //     return false;
-
-    // auto max_precision = std::min(first.exp_, second.exp_);
-    // auto lh = first;
-    // auto rh = second;
-    // lh.ShiftToExp(max_precision);
-    // rh.ShiftToExp(max_precision);
-
-    // auto str_lh = lh.toString();
-    // auto str_rh = rh.toString();
-    // if (str_lh.length() < str_rh.length())
-    //     return true;
-    // if (str_lh.length() > str_rh.length())
-    //     return false;
-
-    // for (size_t ind = 0; ind < str_lh.length(); ++ind) {
-    //     if (str_lh[ind] < str_rh[ind]) {
-    //         return true;
-    //     }
-    //     if (str_lh[ind] > str_rh[ind]) {
-    //         return false;
-    //     }
-    // }
-    // return false;
-
-    //=====================================================
-
-    // if (first.sign_ < second.sign_)
-    //     return true;
-    // if (first.sign_ > second.sign_)
-    //     return false;
-
-    // auto max_precision = std::min(first.exp_, second.exp_);
-    // auto lh = first;
-    // auto rh = second;
-    // lh.ShiftToExp(max_precision);
-    // rh.ShiftToExp(max_precision);
-
-    // if (lh.blocks_.size() < rh.blocks_.size()) {
-    //     // std::cout << "LOG (oper <)1: " << lh.toString() << " < "
-    //     //           << rh.toString() << " = " << true << std::endl;
-    //     return true;
-    // }
-    // if (lh.blocks_.size() > rh.blocks_.size()) {
-    //     // std::cout << "LOG (oper <)2: " << lh.toString() << " < "
-    //     //           << rh.toString() << " = " << false << std::endl;
-    //     return false;
-    // }
-
-    // for (int ind = lh.blocks_.size() - 1; ind >= 0; --ind) {
-    //     if (lh.blocks_[ind] > rh.blocks_[ind]) {
-    //         // std::cout << "LOG (oper <)3: " << lh.toString() << " < "
-    //         //           << rh.toString() << " = " << false << std::endl;
-    //         return false;
-    //     }
-    //     if (lh.blocks_[ind] < rh.blocks_[ind]) {
-    //         // std::cout << "LOG (oper <)4: " << lh.toString() << " < "
-    //         //           << rh.toString() << " = " << true << std::endl;
-    //         return true;
-    //     }
-    // }
-
-    // // std::cout << "LOG (oper <)5: " << lh.toString() << " < " <<
-    // rh.toString()
-    // //           << " = " << false << std::endl;
-
-    // return false;
-
-    auto var1 = [](const BigNum &first, const BigNum &second) {
-        if (first.sign_ < second.sign_)
-            return true;
-        if (first.sign_ > second.sign_)
-            return false;
-
-        auto max_precision = std::min(first.exp_, second.exp_);
-        auto lh = first;
-        auto rh = second;
-        lh.ShiftToExp(max_precision);
-        rh.ShiftToExp(max_precision);
-
-        auto str_lh = lh.toString();
-        auto str_rh = rh.toString();
-        if (str_lh.length() < str_rh.length())
-            return true;
-        if (str_lh.length() > str_rh.length())
-            return false;
-
-        for (size_t ind = 0; ind < str_lh.length(); ++ind) {
-            if (str_lh[ind] < str_rh[ind]) {
-                return true;
-            }
-            if (str_lh[ind] > str_rh[ind]) {
-                return false;
-            }
-        }
-        return false;
-    };
-
-    auto var2 = [](const BigNum &first, const BigNum &second,
-                   bool debug = false) {
+    auto isLower = [](const BigNum &first, const BigNum &second,
+                      bool debug = false) {
         if (first.sign_ < second.sign_)
             return true;
         if (first.sign_ > second.sign_)
@@ -449,14 +315,7 @@ bool operator<(const BigNum &first, const BigNum &second) {
         return false;
     };
 
-    // auto res1 = var1(first, second);
-    auto res2 = var2(first, second);
-
-    // if (res1 != res2) {
-    //     var2(first, second, true);
-    //     exit(1);
-    // }
-
+    auto res2 = isLower(first, second);
     return res2;
 }
 
@@ -494,10 +353,6 @@ BigNum operator*(const BigNum &first, const BigNum &second) {
     return res;
 }
 
-// BigNum Division(BigNum first, const BigNum& second, uint16_t precision) {
-//     return BigNumDiv(std::move(first), second, precision);
-// }
-
 void swap(BigNum &lhs, BigNum &rhs) {
     std::swap(lhs.blocks_, rhs.blocks_);
     std::swap(lhs.exp_, rhs.exp_);
@@ -509,51 +364,9 @@ bool operator!=(const BigNum &first, const BigNum &second) {
 }
 
 bool operator==(const BigNum &first, const BigNum &second) {
-    //    auto first_str = first.toString();
-    //    auto second_str = second.toString();
-    //
-    //    auto itr1 = first_str.begin();
-    //    auto itr2 = second_str.begin();
-    //
-    //    while (itr1 < first_str.end() && itr2 < second_str.end()) {
-    //        if (*itr1 != *itr2) return false;
-    //        itr1++;
-    //        itr2++;
-    //    }
-    //
-    //    auto is_only_zeroes = [](decltype(itr1)& itr, decltype(first_str)&
-    //    str) {
-    //        if (itr == str.end()) return true;
-    //
-    //        if (itr < str.end() && *itr != '.') return false;
-    //        ++itr;
-    //        while (itr < str.end()) {
-    //            if (*itr != '0') return false;
-    //            ++itr;
-    //        }
-    //        return true;
-    //    };
-    //
-    //    return is_only_zeroes(itr1, first_str) && is_only_zeroes(itr2,
-    //    second_str);
-
-    // auto max_precision = std::min(first.exp_, second.exp_);
-    // auto lh = first;
-    // auto rh = second;
-    // lh.ShiftToExp(max_precision);
-    // rh.ShiftToExp(max_precision);
-
-    // auto str_lh = lh.toString();
-    // auto str_rh = rh.toString();
-    // if (str_lh.length() != str_rh.length())
-    //     return false;
-
-    // for (size_t ind = 0; ind < str_lh.length(); ++ind) {
-    //     if (str_lh[ind] != str_rh[ind]) {
-    //         return false;
-    //     }
-    // }
-    // return true;
+    if (first.sign_ != second.sign_) {
+        return false;
+    }
 
     auto max_precision = std::min(first.exp_, second.exp_);
     auto lh = first;
@@ -812,24 +625,13 @@ BigNum CalcPi(int32_t precision) {
     auto sqrtC = sqrt(10005 * one, one);
     auto r = res.second * sqrtC * 426880;
     auto pi = BigNumDiv(r, res.third, 0);
-    // auto str = pi.toString();
-    //
-    // str.pop_back();
-    // if (pi.getExp() < 0) {
-    //     for (int i = 0; i < -pi.getExp() + 1; ++i) {
-    //         str.pop_back();
-    //     }
-    // }
-    // pi = BigNum(str);
-    // pi.setExp(-precision + 1);
-    // return pi;
 
-    // return pi;
     auto pi_str = pi.toString();
     while (pi_str.length() > precision) {
         pi_str.pop_back();
     }
     pi = BigNum(pi_str);
     pi.setExp(pi.getExp() - (pi_str.length()) + 1);
+
     return pi;
 }
