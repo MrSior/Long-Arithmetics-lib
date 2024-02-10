@@ -43,7 +43,7 @@ $(OBJ)/%.o: $(SRC)/%.cpp
 	@$(CXX) $(CXXFLAGS) -c $< -o $@ -I./$(LIBSRCDIR)/
 
 $(TEST)/bin/%: $(TEST)/%.cpp $(PIOBJ) $(PIOBJS)
-	$(CXX) $(CXXFLAGS) $< -I./$(LIBSRCDIR)/ -I./$(PISRC)/ -o $@ $(PIOBJS) -L./$(LIBDIR)/ -lBigNumLibrary
+	@$(CXX) $(CXXFLAGS) $< -I./$(LIBSRCDIR)/ -I./$(PISRC)/ $(PIOBJS) -o $@ -L./$(LIBDIR)/ -lBigNumLibrary
 
 $(PIOBJ)/%.o: $(PISRC)/%.cpp
 	@$(CXX) $(CXXFLAGS) -c $< -o $@ -I./$(LIBSRCDIR)/
@@ -63,14 +63,11 @@ $(BUILD):
 $(TEST)/bin:
 	@mkdir $@
 
-$(PI):
-	@mkdir $@
-
 $(PIOBJ):
 	@mkdir $@
 
 test: $(LIB) $(TEST)/bin $(TESTBINS)
-	for test in $(TESTBINS) ; do ./$$test ; done
+	@for test in $(TESTBINS) ; do ./$$test ; done
 
 run: $(BUILD)/main
 	@./$(BUILD)/main
@@ -78,4 +75,6 @@ run: $(BUILD)/main
 clean:
 	@rm -rf $(OBJ) $(LIBOBJDIR) $(LIBDIR) $(BUILD) $(TEST)/bin $(PIOBJ)
 
-.PHONY: run clean
+.PHONY: run clean test
+
+.SECONDERY: $(PIOBJS)

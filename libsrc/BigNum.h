@@ -9,6 +9,9 @@
 #include <type_traits>
 #include <vector>
 
+#include <cstddef>
+#include <cstdint>
+
 template <typename T>
 concept Number = std::integral<T> || std::floating_point<T>;
 
