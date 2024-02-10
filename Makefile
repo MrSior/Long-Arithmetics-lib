@@ -20,40 +20,54 @@ TEST=tests
 TESTS=$(wildcard $(TEST)/*.cpp)
 TESTBINS=$(patsubst $(TEST)/%.cpp, $(TEST)/bin/%, $(TESTS))
 
+PIOBJ=piobj
+PISRC=pisrc
+PISRCS=$(wildcard $(PISRC)/*.cpp)
+PIOBJS=$(patsubst $(PISRC)/%.cpp, $(PIOBJ)/%.o, $(PISRCS))
+
 all: $(LIB) $(BUILD)/main
 
 $(BUILD)/main: $(OBJ) $(OBJS) $(BUILD)
-	$(CXX) $(CXXFLAGS) $(OBJS) -o $(BUILD)/main -L./$(LIBDIR)/ -lBigNumLibrary
+	@$(CXX) $(CXXFLAGS) $(OBJS) -o $(BUILD)/main -L./$(LIBDIR)/ -lBigNumLibrary
 
-$(LIB): $(LIBDIR) $(LIBOBJDIR) $(LIBOBJS)
-	ar -cvrs $(LIB) $(LIBOBJS)
+$(LIB): $(LIBDIR) $(LIBOBJDIR) $(LIBOBJS) $(LIBSRCS)
+	@ar -cvrs $(LIB) $(LIBOBJS)
 
 $(LIBOBJDIR)/%.o: $(LIBSRCDIR)/%.cpp $(LIBSRCDIR)/%.h
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+	@$(CXX) $(CXXFLAGS) -c $< -o $@
 
-$(OBJ)/%.o: $(SRC)/%.cpp $(SRC)/%.h
-	$(CXX) $(CXXFLAGS) -llibrary $(LIB) -c $< -o $@
+# $(OBJ)/%.o: $(SRC)/%.cpp $(SRC)/%.h
+# 	$(CXX) $(CXXFLAGS) -c $< -o $@ -I./$(LIBSRCDIR)/
 
 $(OBJ)/%.o: $(SRC)/%.cpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@ -I./$(LIBSRCDIR)/
+	@$(CXX) $(CXXFLAGS) -c $< -o $@ -I./$(LIBSRCDIR)/
 
-$(TEST)/bin/%: $(TEST)/%.cpp
-	$(CXX) $(CXXFLAGS) $< -I./$(LIBSRCDIR)/ -o $@ -L./$(LIBDIR)/ -lBigNumLibrary
+$(TEST)/bin/%: $(TEST)/%.cpp $(PIOBJ) $(PIOBJS)
+	$(CXX) $(CXXFLAGS) $< -I./$(LIBSRCDIR)/ -I./$(PISRC)/ -o $@ $(PIOBJS) -L./$(LIBDIR)/ -lBigNumLibrary
+
+$(PIOBJ)/%.o: $(PISRC)/%.cpp
+	@$(CXX) $(CXXFLAGS) -c $< -o $@ -I./$(LIBSRCDIR)/
 
 $(OBJ):
-	mkdir $@
+	@mkdir $@
 
 $(LIBDIR):
-	mkdir $@
+	@mkdir $@
 
 $(LIBOBJDIR):
-	mkdir $@
+	@mkdir $@
 
 $(BUILD):
-	mkdir $@
+	@mkdir $@
 
 $(TEST)/bin:
-	mkdir $@
+	@mkdir $@
+
+$(PI):
+	@mkdir $@
+
+$(PIOBJ):
+	@mkdir $@
 
 test: $(LIB) $(TEST)/bin $(TESTBINS)
 	for test in $(TESTBINS) ; do ./$$test ; done
@@ -62,6 +76,6 @@ run: $(BUILD)/main
 	@./$(BUILD)/main
 
 clean:
-	@rm -rf $(OBJ) $(LIBOBJDIR) $(LIBDIR) $(BUILD) $(TEST)/bin
+	@rm -rf $(OBJ) $(LIBOBJDIR) $(LIBDIR) $(BUILD) $(TEST)/bin $(PIOBJ)
 
 .PHONY: run clean

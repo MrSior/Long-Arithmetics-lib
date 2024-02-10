@@ -22,6 +22,6 @@ int main() {
 
     BigNum a = "1";
     BigNum b = "2";
-    std::cout << CalcPi(10).toString();
+    // std::cout << CalcPi(10).toString();
     return 0;
 }

@@ -84,7 +84,9 @@ class BigNum {
     friend bool operator>=(const BigNum &, const BigNum &);
 };
 
+BigNum BigNumDiv(BigNum first, const BigNum &second, int32_t precision,
+                 bool debug = false);
 BigNum operator"" _bn(const char *val);
-BigNum CalcPi(int32_t precision);
+// BigNum CalcPi(int32_t precision);
 
 #endif // BIGNUMSLIBRARY_BIGNUM_H

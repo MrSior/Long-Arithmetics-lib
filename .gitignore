@@ -2,9 +2,11 @@ lib/
 libobj/
 
 obj/
-bild/
+build/
 
 tests/bin/
+
+piobj/
 
 .DS_Store
 .clangd
