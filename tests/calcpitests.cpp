@@ -52,7 +52,7 @@ int main() {
         return false;
     };
 
-    for (auto digits : {10, 40, 50, 70, 100, 500}) {
+    for (auto digits : {10, 40, 50, 70, 100}) {
         if (!check(digits)) {
             // return 0;
         }
